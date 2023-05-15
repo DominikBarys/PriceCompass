@@ -1,24 +1,27 @@
 package pl.dominikbarys.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 
+import java.io.Serializable;
 import java.util.Objects;
 
 @Entity
-public class Product {
+public class Product implements Serializable {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
     private String name;
-    private int categoryId;
+    @ManyToOne
+    @JoinColumn(name = "category_id")
+    private Category category;
 
     public Product(){}
 
-    public Product(int id, String name, int categoryId) {
+    public Product(int id, String name, Category category) {
         this.id = id;
         this.name = name;
-        this.categoryId = categoryId;
+        this.category = category;
     }
 
     public int getId() {
@@ -37,12 +40,12 @@ public class Product {
         this.name = name;
     }
 
-    public int getCategoryId() {
-        return categoryId;
+    public Category getCategory() {
+        return category;
     }
 
-    public void setCategoryId(int categoryId) {
-        this.categoryId = categoryId;
+    public void setCategory(Category category) {
+        this.category = category;
     }
 
     @Override
@@ -50,12 +53,12 @@ public class Product {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Product product = (Product) o;
-        return id == product.id && categoryId == product.categoryId && Objects.equals(name, product.name);
+        return id == product.id && category == product.category && Objects.equals(name, product.name);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name, categoryId);
+        return Objects.hash(id, name, category);
     }
 
     @Override
@@ -63,7 +66,7 @@ public class Product {
         return "Product{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
-                ", categoryId=" + categoryId +
+                ", categoryId=" + category +
                 '}';
     }
 }

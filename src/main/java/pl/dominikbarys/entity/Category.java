@@ -2,18 +2,19 @@ package pl.dominikbarys.entity;
 
 import jakarta.persistence.*;
 
+import java.io.Serializable;
 import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 
 @Entity
-public class Category {
+public class Category implements Serializable {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
     private String name;
-    @OneToMany(targetEntity = Product.class, cascade = CascadeType.ALL)
-    @JoinColumn(name = "product_fk", referencedColumnName = "id")
+    @OneToMany(mappedBy = "category")
     private List<Product> products;
 
     public Category(){}
@@ -40,13 +41,14 @@ public class Category {
         this.name = name;
     }
 
-    public List<Product> getProducts() {
+    public List<Product> getProducts(){
         return products;
     }
 
-    public void setProducts(List<Product> products) {
+    public void setProducts(List<Product> products){
         this.products = products;
     }
+
 
     @Override
     public boolean equals(Object o) {
