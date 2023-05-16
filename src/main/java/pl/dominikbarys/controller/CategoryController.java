@@ -7,6 +7,7 @@ import pl.dominikbarys.entity.Category;
 import pl.dominikbarys.service.CategoryService;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/category")
@@ -38,8 +39,17 @@ public class CategoryController {
 
     @PutMapping("/update")
     public ResponseEntity<Category> updateCategory(@RequestBody Category category){
-        Category updatedCategory = categoryService.updateCategory(category);
-        return new ResponseEntity<>(updatedCategory, HttpStatus.OK);
+
+        Optional<Category> existingCategory = categoryService.findCategoryByName(category);
+
+        if(existingCategory.isPresent()){
+            existingCategory.get().getProducts().addAll(category.getProducts());
+            Category updatedCategory = categoryService.addCategory(existingCategory.get());
+            return new ResponseEntity<>(updatedCategory, HttpStatus.OK);
+        }else{
+            Category updatedCategory = categoryService.updateCategory(category);
+            return new ResponseEntity<>(updatedCategory, HttpStatus.OK);
+        }
     }
 
     @DeleteMapping("/delete/{id}")

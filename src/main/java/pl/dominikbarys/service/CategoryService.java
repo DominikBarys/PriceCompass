@@ -6,6 +6,7 @@ import pl.dominikbarys.exception.CategoryNotFoundException;
 import pl.dominikbarys.repository.CategoryRepository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class CategoryService {
@@ -38,6 +39,10 @@ public class CategoryService {
                         .orElseThrow(() ->
                                 new CategoryNotFoundException("Category with id " + id + " does not exist"));
         categoryRepository.deleteById(id);
+    }
+
+    public Optional<Category> findCategoryByName(Category category){
+        return categoryRepository.findByName(category.getName());
     }
 
 }
