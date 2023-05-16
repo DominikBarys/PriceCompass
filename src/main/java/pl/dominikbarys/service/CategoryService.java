@@ -34,6 +34,9 @@ public class CategoryService {
     }
 
     public void deleteCategory(Integer id){
+        categoryRepository.findById(id)
+                        .orElseThrow(() ->
+                                new CategoryNotFoundException("Category with id " + id + " does not exist"));
         categoryRepository.deleteById(id);
     }
 
