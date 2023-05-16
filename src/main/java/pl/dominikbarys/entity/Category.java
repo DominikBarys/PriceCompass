@@ -1,14 +1,14 @@
 package pl.dominikbarys.entity;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 
 import java.io.Serializable;
 import java.util.List;
 import java.util.Objects;
-import java.util.Set;
 
 @Entity
-public class Category implements Serializable {
+public class Category implements Serializable{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -16,6 +16,7 @@ public class Category implements Serializable {
     private String name;
     @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn(name = "category_id", referencedColumnName = "id")
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private List<Product> products;
 
     public Category(){}

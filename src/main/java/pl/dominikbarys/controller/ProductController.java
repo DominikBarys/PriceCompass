@@ -3,6 +3,7 @@ package pl.dominikbarys.controller;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import pl.dominikbarys.dto.ProductDTO;
 import pl.dominikbarys.entity.Product;
 import pl.dominikbarys.service.ProductService;
 
@@ -19,14 +20,14 @@ public class ProductController {
     }
 
     @GetMapping("/all")
-    public ResponseEntity<List<Product>> getAllProducts(){
-        List<Product> products = productService.findAllProducts();
+    public ResponseEntity<List<ProductDTO>> getAllProducts(){
+        List<ProductDTO> products = productService.findAllProducts();
         return new ResponseEntity<>(products, HttpStatus.OK);
     }
 
     @GetMapping("/find/{id}")
-    public ResponseEntity<Product> findProductById(@PathVariable("id") Integer id){
-        Product product = productService.findProductById(id);
+    public ResponseEntity<ProductDTO> findProductById(@PathVariable("id") Integer id){
+        ProductDTO product = productService.findProductById(id);
         return new ResponseEntity<>(product, HttpStatus.OK);
     }
 
@@ -46,6 +47,15 @@ public class ProductController {
     public ResponseEntity<?> deleteProduct(@PathVariable("id") Integer id){
         productService.deleteProduct(id);
         return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @PatchMapping("/{productId}/category/{categoryId}")
+    public ResponseEntity<Product> assignCategoryToProduct(
+            @PathVariable("productId") Integer productId,
+            @PathVariable("categoryId") Integer categoryId
+    ){
+        Product updatedCategoryProduct = productService.assignCategoryToProduct(productId, categoryId);
+        return new ResponseEntity<>(updatedCategoryProduct, HttpStatus.OK);
     }
 
 }
