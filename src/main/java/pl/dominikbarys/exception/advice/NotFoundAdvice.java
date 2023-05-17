@@ -5,16 +5,15 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
-import pl.dominikbarys.exception.OfferNotFoundException;
+import pl.dominikbarys.exception.NotFoundException;
 
 @ControllerAdvice
-public class OfferNotFoundAdvice {
+public class NotFoundAdvice {
 
     @ResponseBody
-    @ExceptionHandler(OfferNotFoundException.class)
+    @ExceptionHandler(NotFoundException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
-    String offerNotFoundAdvice(OfferNotFoundException ex){
+    String notFoundHandler(NotFoundException ex){
         return ex.getMessage();
     }
-
 }

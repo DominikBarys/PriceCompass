@@ -3,7 +3,9 @@ package pl.dominikbarys.controller;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import pl.dominikbarys.dto.category.UpdateCategoryDTO;
 import pl.dominikbarys.entity.Category;
+import pl.dominikbarys.entity.Product;
 import pl.dominikbarys.service.CategoryService;
 
 import java.util.List;
@@ -37,19 +39,22 @@ public class CategoryController {
         return new ResponseEntity<>(newCategory, HttpStatus.CREATED);
     }
 
-    @PutMapping("/update")
-    public ResponseEntity<Category> updateCategory(@RequestBody Category category){
+    @PutMapping("/update/{id}")
+    public ResponseEntity<Category> updateCategory(@RequestBody Category category, @PathVariable("id") Integer id){
+        Category updatedCategory = categoryService.updateCategory(category, id);
+        return new ResponseEntity<>(updatedCategory, HttpStatus.OK);
+    }
 
-        Optional<Category> existingCategory = categoryService.findCategoryByName(category);
+    @PatchMapping("/addProducts/{id}")
+    public ResponseEntity<Category> addProducts(@RequestBody List<Product> products, @PathVariable("id") Integer id){
+        Category updatedCategory = categoryService.addProducts(products, id);
+        return new ResponseEntity<>(updatedCategory, HttpStatus.OK);
+    }
 
-        if(existingCategory.isPresent()){
-            existingCategory.get().getProducts().addAll(category.getProducts());
-            Category updatedCategory = categoryService.addCategory(existingCategory.get());
-            return new ResponseEntity<>(updatedCategory, HttpStatus.OK);
-        }else{
-            Category updatedCategory = categoryService.updateCategory(category);
-            return new ResponseEntity<>(updatedCategory, HttpStatus.CREATED); //DO SPRAWDZENIA CZY HTTP STATUS DZIALA
-        }
+    @PatchMapping("/removeProducts/{id}")
+    public ResponseEntity<Category> removeProducts(@RequestBody List<Product> products, @PathVariable("id") Integer id){
+        Category updatedCategory = categoryService.removeProducts(products, id);
+        return new ResponseEntity<>(updatedCategory, HttpStatus.OK);
     }
 
     @DeleteMapping("/delete/{id}")

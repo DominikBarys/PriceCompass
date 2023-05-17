@@ -2,7 +2,7 @@ package pl.dominikbarys.service;
 
 import org.springframework.stereotype.Service;
 import pl.dominikbarys.entity.Offer;
-import pl.dominikbarys.exception.OfferNotFoundException;
+import pl.dominikbarys.exception.NotFoundException;
 import pl.dominikbarys.repository.OfferRepository;
 
 import java.util.List;
@@ -22,7 +22,7 @@ public class OfferService {
 
     public Offer findOfferById(Integer id){
         return offerRepository.findById(id)
-                .orElseThrow(() -> new OfferNotFoundException("Offer by id " + id + " was not found"));
+                .orElseThrow(() -> new NotFoundException("Offer by id " + id + " was not found"));
     }
 
     public Offer addOffer(Offer offer){
@@ -35,7 +35,7 @@ public class OfferService {
 
     public void deleteOffer(Integer id){
         offerRepository.findById(id)
-                .orElseThrow(() -> new OfferNotFoundException("Offer with id " + id + " does not exist"));
+                .orElseThrow(() -> new NotFoundException("Offer with id " + id + " does not exist"));
         offerRepository.deleteById(id);
     }
 
