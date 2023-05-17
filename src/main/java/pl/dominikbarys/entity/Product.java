@@ -1,8 +1,10 @@
 package pl.dominikbarys.entity;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 
 import java.io.Serializable;
+import java.util.List;
 import java.util.Objects;
 
 @Entity
@@ -15,6 +17,11 @@ public class Product implements Serializable{
     @ManyToOne
     @JoinColumn(name = "category_id")
     private Category category;
+
+    @OneToMany
+    @JoinColumn(name = "product_id")
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+    private List<Offer> offers;
 
     public Product(){}
 

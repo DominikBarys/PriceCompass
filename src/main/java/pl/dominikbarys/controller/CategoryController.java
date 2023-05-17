@@ -48,7 +48,7 @@ public class CategoryController {
             return new ResponseEntity<>(updatedCategory, HttpStatus.OK);
         }else{
             Category updatedCategory = categoryService.updateCategory(category);
-            return new ResponseEntity<>(updatedCategory, HttpStatus.OK);
+            return new ResponseEntity<>(updatedCategory, HttpStatus.CREATED); //DO SPRAWDZENIA CZY HTTP STATUS DZIALA
         }
     }
 
