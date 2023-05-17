@@ -54,12 +54,13 @@ public class ProductService {
 
             product.setName(newProduct.getName());
 
-            Category category = categoryRepository.findByName(newProduct.getCategory())
-                    .orElseThrow(()-> new NotFoundException(
-                            "Category with name " + newProduct.getCategory() + " does not exist"
-                    ));
-
-            product.setCategory(category);
+            if(newProduct.getCategory() != null){
+                Category category = categoryRepository.findByName(newProduct.getCategory())
+                        .orElseThrow(()-> new NotFoundException(
+                                "Category with name " + newProduct.getCategory() + " does not exist"
+                        ));
+                product.setCategory(category);
+            }
 
             return productRepository.save(product);
     }

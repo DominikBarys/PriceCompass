@@ -2,6 +2,7 @@ package pl.dominikbarys.entity;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
+import org.hibernate.annotations.Cascade;
 
 import java.io.Serializable;
 import java.util.List;
@@ -15,7 +16,7 @@ public class Category implements Serializable{
     private int id;
 
     private String name;
-    @OneToMany(cascade = CascadeType.ALL)
+    @OneToMany
     @JoinColumn(name = "category_id", referencedColumnName = "id")
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private List<Product> products;

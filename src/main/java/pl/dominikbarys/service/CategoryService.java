@@ -53,11 +53,12 @@ public class CategoryService {
         Category category = categoryRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("Category with id " + id +" does not exist"));
 
+
         category.setName(newCategory.getName());
 
         List<Product> newProducts = newCategory.getProducts().stream()
                 .filter(product -> !productRepository.existsByName(product.getName()))
-                .toList();
+                .collect(Collectors.toList());
 
         category.setProducts(newProducts);
 
@@ -72,10 +73,10 @@ public class CategoryService {
 
         List<Product> newProducts = products.stream()
                 .filter(product -> !productRepository.existsByName(product.getName()))
-                .toList();
+                .collect(Collectors.toList());
 
         category.getProducts().addAll(newProducts);
-        return category;
+        return categoryRepository.save(category);
     }
 
     public Category removeProducts(List<Product> products, Integer id) {
@@ -83,8 +84,13 @@ public class CategoryService {
         Category category = categoryRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("Category with id " + id + " was not found"));
 
-        category.getProducts().removeAll(products);
-        return category;
+        List<String> productNames = products.stream()
+                        .map(Product::getName)
+                        .collect(Collectors.toList());
+
+        category.getProducts().removeIf(product -> productNames.contains(product.getName()));
+
+        return categoryRepository.save(category);
     }
 
     public void deleteCategory(Integer id){
