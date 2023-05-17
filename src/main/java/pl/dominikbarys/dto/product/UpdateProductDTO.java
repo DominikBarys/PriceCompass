@@ -1,18 +1,12 @@
-package pl.dominikbarys.dto;
+package pl.dominikbarys.dto.product;
 
-public class ProductDTO {
+import pl.dominikbarys.entity.Category;
 
-    private int id;
+public class UpdateProductDTO {
+
     private String name;
+
     private String category;
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
 
     public String getName() {
         return name;
@@ -21,6 +15,7 @@ public class ProductDTO {
     public void setName(String name) {
         this.name = name;
     }
+
 
     public String getCategory() {
         return category;

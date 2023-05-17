@@ -1,11 +1,12 @@
 package pl.dominikbarys.service;
 
 import org.springframework.stereotype.Service;
-import pl.dominikbarys.dto.ProductDTO;
+import pl.dominikbarys.dto.product.ProductDTO;
+import pl.dominikbarys.dto.product.UpdateProductDTO;
 import pl.dominikbarys.entity.Category;
 import pl.dominikbarys.entity.Product;
-import pl.dominikbarys.exception.CategoryNotFoundException;
-import pl.dominikbarys.exception.ProductNotFoundException;
+import pl.dominikbarys.exception.NotFoundException;
+import pl.dominikbarys.exception.NotUniqueException;
 import pl.dominikbarys.repository.CategoryRepository;
 import pl.dominikbarys.repository.ProductRepository;
 
@@ -27,32 +28,49 @@ public class ProductService {
     public List<ProductDTO> findAllProducts(){
         return productRepository.findAll()
                 .stream()
-                .map(this::convertProductToDTO)
+                .map(this::convertProductToProductDTO)
                 .collect(Collectors.toList());
     }
 
     public ProductDTO findProductById(Integer id){
         Product product = productRepository.findById(id)
-                .orElseThrow(() -> new ProductNotFoundException("Product by id " + id + " was not found"));
+                .orElseThrow(() -> new NotFoundException("Product by id " + id + " was not found"));
 
-        return convertProductToDTO(product);
+        return convertProductToProductDTO(product);
     }
 
     public Product addProduct(Product product){
-        return productRepository.save(product);
+        if(!productRepository.existsByName(product.getName())){
+            return productRepository.save(product);
+        }else{
+            throw new NotUniqueException("Product with name " + product.getName() +" already exists");
+        }
     }
 
-    public Product updateProduct(Product product){
-        return productRepository.save(product);
+    public Product updateProduct(UpdateProductDTO newProduct, Integer id){
+
+            Product product = productRepository.findById(id)
+                    .orElseThrow(() -> new NotFoundException("Product with id " + id +" does not exist"));
+
+            product.setName(newProduct.getName());
+
+            Category category = categoryRepository.findByName(newProduct.getCategory())
+                    .orElseThrow(()-> new NotFoundException(
+                            "Category with name " + newProduct.getCategory() + " does not exist"
+                    ));
+
+            product.setCategory(category);
+
+            return productRepository.save(product);
     }
 
     public void deleteProduct(Integer id){
         productRepository.findById(id)
-                        .orElseThrow(() -> new ProductNotFoundException("Product with id " + id +" does not exist"));
+                        .orElseThrow(() -> new NotFoundException("Product with id " + id +" does not exist"));
         productRepository.deleteById(id);
     }
 
-    public ProductDTO convertProductToDTO(Product product){
+    public ProductDTO convertProductToProductDTO(Product product){
         ProductDTO productDTO = new ProductDTO();
         productDTO.setId(product.getId());
         productDTO.setName(product.getName());
@@ -64,9 +82,9 @@ public class ProductService {
 
     public Product assignCategoryToProduct(Integer productId, Integer categoryId){
         Product product = productRepository.findById(productId)
-                .orElseThrow(() -> new ProductNotFoundException("Product by id " + productId + " was not found"));
+                .orElseThrow(() -> new NotFoundException("Product by id " + productId + " was not found"));
         Category category = categoryRepository.findById(categoryId)
-                .orElseThrow(() -> new CategoryNotFoundException("Category by id " + categoryId + " was not found"));
+                .orElseThrow(() -> new NotFoundException("Category by id " + categoryId + " was not found"));
         product.setCategory(category);
         return productRepository.save(product);
     }

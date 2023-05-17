@@ -13,6 +13,7 @@ public class Product implements Serializable{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
+
     private String name;
     @ManyToOne
     @JoinColumn(name = "category_id")

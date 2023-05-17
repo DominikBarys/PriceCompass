@@ -3,7 +3,8 @@ package pl.dominikbarys.controller;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import pl.dominikbarys.dto.ProductDTO;
+import pl.dominikbarys.dto.product.ProductDTO;
+import pl.dominikbarys.dto.product.UpdateProductDTO;
 import pl.dominikbarys.entity.Product;
 import pl.dominikbarys.service.ProductService;
 
@@ -37,9 +38,9 @@ public class ProductController {
         return new ResponseEntity<>(newProduct, HttpStatus.CREATED);
     }
 
-    @PutMapping("/update")
-    public ResponseEntity<Product> updateProduct(@RequestBody Product product){
-        Product updatedProduct = productService.updateProduct(product);
+    @PutMapping("/update/{id}")
+    public ResponseEntity<Product> updateProduct(@RequestBody UpdateProductDTO product, @PathVariable("id") Integer id){
+        Product updatedProduct = productService.updateProduct(product, id);
         return new ResponseEntity<>(updatedProduct, HttpStatus.OK);
     }
 
