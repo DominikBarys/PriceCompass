@@ -51,4 +51,13 @@ public class SalesPointController {
         return new ResponseEntity<>(salesPoint, HttpStatus.OK);
     }
 
+    @PatchMapping("/{salesPointId}/address/{addressId}")
+    public ResponseEntity<SalesPointDTO> assignAddressToSalesPoint(
+            @PathVariable("salesPointId") Integer salesPointId,
+            @PathVariable("addressId") Integer addressId){
+
+        SalesPointDTO salesPointDTO = salesPointService.assignAddressToSalesPoint(salesPointId, addressId);
+        return new ResponseEntity<>(salesPointDTO, HttpStatus.OK);
+    }
+
 }

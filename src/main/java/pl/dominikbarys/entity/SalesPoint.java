@@ -2,11 +2,12 @@ package pl.dominikbarys.entity;
 
 import jakarta.persistence.*;
 
+import java.io.Serializable;
 import java.util.List;
 import java.util.Objects;
 
 @Entity
-public class SalesPoint {
+public class SalesPoint implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -17,6 +18,10 @@ public class SalesPoint {
     @OneToMany
     @JoinColumn(name = "sales_point_id", referencedColumnName = "id")
     private List<Offer> offers;
+
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "address_id")
+    private Address address;
 
     public int getId() {
         return id;
@@ -42,17 +47,24 @@ public class SalesPoint {
         this.offers = offers;
     }
 
+    public Address getAddress() {
+        return address;
+    }
+
+    public void setAddress(Address address) {
+        this.address = address;
+    }
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         SalesPoint that = (SalesPoint) o;
-        return id == that.id && Objects.equals(name, that.name) && Objects.equals(offers, that.offers);
+        return id == that.id && Objects.equals(name, that.name) && Objects.equals(offers, that.offers) && Objects.equals(address, that.address);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name, offers);
+        return Objects.hash(id, name, offers, address);
     }
 
     @Override
@@ -60,7 +72,8 @@ public class SalesPoint {
         return "SalesPoint{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
-                ", offer=" + offers +
+                ", offers=" + offers +
+                ", address=" + address +
                 '}';
     }
 }

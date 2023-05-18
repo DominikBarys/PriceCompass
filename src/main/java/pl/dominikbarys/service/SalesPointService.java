@@ -3,12 +3,13 @@ package pl.dominikbarys.service;
 import org.springframework.stereotype.Service;
 import pl.dominikbarys.dto.salespoint.CreateSalesPointDTO;
 import pl.dominikbarys.dto.salespoint.SalesPointDTO;
+import pl.dominikbarys.entity.Address;
 import pl.dominikbarys.entity.Offer;
 import pl.dominikbarys.entity.SalesPoint;
 import pl.dominikbarys.exception.NotFoundException;
 import pl.dominikbarys.exception.NotUniqueException;
+import pl.dominikbarys.repository.AddressRepository;
 import pl.dominikbarys.repository.OfferRepository;
-import pl.dominikbarys.repository.ProductRepository;
 import pl.dominikbarys.repository.SalesPointRepository;
 
 import java.util.List;
@@ -21,9 +22,14 @@ public class SalesPointService {
 
     private final OfferRepository offerRepository;
 
-    public SalesPointService(SalesPointRepository salesPointRepository, OfferRepository offerRepository) {
+    private final AddressRepository addressRepository;
+
+    public SalesPointService(SalesPointRepository salesPointRepository,
+                             OfferRepository offerRepository,
+                             AddressRepository addressRepository) {
         this.salesPointRepository = salesPointRepository;
         this.offerRepository = offerRepository;
+        this.addressRepository = addressRepository;
     }
 
     public List<SalesPointDTO> findAllSalesPoints(){
@@ -51,6 +57,7 @@ public class SalesPointService {
             SalesPoint newSalesPoint = new SalesPoint();
             newSalesPoint.setName(createSalesPointDTO.getName());
             newSalesPoint.setOffers(offers);
+            newSalesPoint.setAddress(createSalesPointDTO.getAddress());
 
             salesPointRepository.save(newSalesPoint);
 
@@ -96,6 +103,7 @@ public class SalesPointService {
         SalesPointDTO salesPointDTO = new SalesPointDTO();
         salesPointDTO.setId(salesPoint.getId());
         salesPointDTO.setName(salesPoint.getName());
+        salesPointDTO.setAddress(salesPoint.getAddress());
 
         List<Integer> offersId = salesPoint.getOffers().stream()
                 .map(Offer::getId)
@@ -104,6 +112,22 @@ public class SalesPointService {
         salesPointDTO.setOffers(offersId);
 
         return salesPointDTO;
+    }
+
+    public SalesPointDTO assignAddressToSalesPoint(Integer salesPointId, Integer addressId){
+
+        SalesPoint salesPoint = salesPointRepository.findById(salesPointId)
+                .orElseThrow(() -> new NotFoundException("Sales point with id " + salesPointId + " was not found"));
+
+        Address address = addressRepository.findById(addressId)
+                .orElseThrow(() -> new NotFoundException("Address with id " + addressId + " was not found"));
+
+        salesPoint.setAddress(address);
+
+        salesPointRepository.save(salesPoint);
+
+        return convertSalesPointToSalesPointDTO(salesPoint);
+
     }
 
 }
