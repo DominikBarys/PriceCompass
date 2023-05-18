@@ -3,6 +3,8 @@ package pl.dominikbarys.controller;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import pl.dominikbarys.dto.offer.CreateOfferDTO;
+import pl.dominikbarys.dto.offer.UpdateOfferDTO;
 import pl.dominikbarys.entity.Offer;
 import pl.dominikbarys.service.OfferService;
 
@@ -31,15 +33,22 @@ public class OfferController {
     }
 
     @PostMapping("/add")
-    public ResponseEntity<Offer> addOffer(@RequestBody Offer offer){
+    public ResponseEntity<Offer> addOffer(@RequestBody CreateOfferDTO offer){
         Offer newOffer = offerService.addOffer(offer);
         return new ResponseEntity<>(newOffer, HttpStatus.CREATED);
     }
 
-    @PutMapping("/update")
-    public ResponseEntity<Offer> updateOffer(@RequestBody Offer offer){
-        Offer updatedOffer = offerService.updateOffer(offer);
+    @PutMapping("/update/{id}")
+    public ResponseEntity<Offer> updateOffer(@RequestBody UpdateOfferDTO offer, @PathVariable("id") Integer id){
+        Offer updatedOffer = offerService.updateOffer(offer, id);
         return new ResponseEntity<>(updatedOffer, HttpStatus.OK);
+    }
+
+    @PatchMapping("/{offerId}/product/{productId}")
+    public ResponseEntity<Offer> assignProductToOffer(@PathVariable("offerId") Integer offerId,
+                                                      @PathVariable("productId") Integer productId){
+        Offer updatedProductOffer = offerService.assignProductToOffer(offerId, productId);
+        return new ResponseEntity<>(updatedProductOffer, HttpStatus.OK);
     }
 
     @DeleteMapping("/delete/{id}")
@@ -47,6 +56,5 @@ public class OfferController {
         offerService.deleteOffer(id);
         return new ResponseEntity<>(HttpStatus.OK);
     }
-
 
 }
