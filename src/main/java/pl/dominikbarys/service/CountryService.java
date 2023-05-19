@@ -2,6 +2,7 @@ package pl.dominikbarys.service;
 
 import org.springframework.stereotype.Service;
 import pl.dominikbarys.dto.country.CountryDTO;
+import pl.dominikbarys.dto.country.CreateCountryDTO;
 import pl.dominikbarys.entity.Country;
 import pl.dominikbarys.exception.NotFoundException;
 import pl.dominikbarys.exception.NotUniqueException;
@@ -33,10 +34,14 @@ public class CountryService {
         return convertCountryToCountryDTO(country);
     }
 
-    public CountryDTO addCountry(Country country){
+    public CountryDTO addCountry(CreateCountryDTO country){
         if(!countryRepository.existsByName(country.getName())){
-            Country newCountry = countryRepository.save(country);
-            return convertCountryToCountryDTO(country);
+            Country newCountry = new Country();
+            newCountry.setName(country.getName());
+
+            countryRepository.save(newCountry);
+
+            return convertCountryToCountryDTO(newCountry);
         }else{
             throw new NotUniqueException("Country with name " + country.getName() + " already exists");
         }

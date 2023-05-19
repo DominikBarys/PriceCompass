@@ -15,6 +15,9 @@ public class Address implements Serializable {
     private String street;
     private String postalCode;
     private int number;
+    @ManyToOne
+    @JoinColumn(name = "country_id")
+    private Country country;
 
     public int getId() {
         return id;
@@ -56,17 +59,26 @@ public class Address implements Serializable {
         this.number = number;
     }
 
+
+    public Country getCountry() {
+        return country;
+    }
+
+    public void setCountry(Country country) {
+        this.country = country;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Address address = (Address) o;
-        return id == address.id && number == address.number && Objects.equals(city, address.city) && Objects.equals(street, address.street) && Objects.equals(postalCode, address.postalCode);
+        return id == address.id && number == address.number && Objects.equals(city, address.city) && Objects.equals(street, address.street) && Objects.equals(postalCode, address.postalCode) && Objects.equals(country, address.country);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, city, street, postalCode, number);
+        return Objects.hash(id, city, street, postalCode, number, country);
     }
 
     @Override
@@ -77,6 +89,7 @@ public class Address implements Serializable {
                 ", street='" + street + '\'' +
                 ", postalCode='" + postalCode + '\'' +
                 ", number=" + number +
+                ", country=" + country +
                 '}';
     }
 }

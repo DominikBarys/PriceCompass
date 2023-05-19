@@ -4,6 +4,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import pl.dominikbarys.dto.country.CountryDTO;
+import pl.dominikbarys.dto.country.CreateCountryDTO;
 import pl.dominikbarys.entity.Country;
 import pl.dominikbarys.service.CountryService;
 
@@ -32,7 +33,7 @@ public class CountryController {
     }
 
     @PostMapping("/add")
-    public ResponseEntity<CountryDTO> addCountry(@RequestBody Country country){
+    public ResponseEntity<CountryDTO> addCountry(@RequestBody CreateCountryDTO country){
         CountryDTO newCountry = countryService.addCountry(country);
         return new ResponseEntity<>(newCountry, HttpStatus.CREATED);
     }

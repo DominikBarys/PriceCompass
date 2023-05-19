@@ -1,9 +1,6 @@
 package pl.dominikbarys.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 
 import java.io.Serializable;
 import java.util.List;
@@ -18,6 +15,8 @@ public class Country implements Serializable {
 
     private String name;
 
+    @OneToMany
+    @JoinColumn(name = "country_id", referencedColumnName = "id")
     private List<Address> addresses;
 
     public int getId() {
@@ -35,7 +34,6 @@ public class Country implements Serializable {
     public void setName(String name) {
         this.name = name;
     }
-
 
     public List<Address> getAddresses() {
         return addresses;
