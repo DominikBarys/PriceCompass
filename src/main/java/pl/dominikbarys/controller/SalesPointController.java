@@ -12,7 +12,7 @@ import pl.dominikbarys.service.SalesPointService;
 import java.util.List;
 
 @RestController
-@RequestMapping("/sales_point")
+@RequestMapping("/salesPoints")
 public class SalesPointController {
 
     private final SalesPointService salesPointService;

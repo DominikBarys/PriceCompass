@@ -11,7 +11,7 @@ import pl.dominikbarys.service.AddressService;
 import java.util.List;
 
 @RestController
-@RequestMapping("/address")
+@RequestMapping("/addresses")
 public class AddressController {
 
     private final AddressService addressService;

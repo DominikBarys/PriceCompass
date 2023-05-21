@@ -11,7 +11,7 @@ import pl.dominikbarys.service.OfferService;
 import java.util.List;
 
 @RestController
-@RequestMapping("/offer")
+@RequestMapping("/offers")
 public class OfferController {
 
     private final OfferService offerService;
